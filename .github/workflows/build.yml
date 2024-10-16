@@ -34,7 +34,7 @@ jobs:
       run: echo $DOCKER_TOKEN | docker login -u $DOCKER_USERNAME --password-stdin
 
     - name: Tag Docker image
-      run: docker tag DevOps_Assignment_3 bgubhaju/DevOps_Assignment_3:latest
+      run: docker tag devops_assignment_3 bgubhaju/DevOps_Assignment_3:latest
 
     - name: Push Docker image to Docker Hub
       run: docker push bgubhaju/DevOps_Assignment_3:latest
