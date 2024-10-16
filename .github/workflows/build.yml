@@ -1,0 +1,40 @@
+name:  Build Docker Image
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Docker image
+      run: docker build -t DevOps_Assignment_3 .
+
+    - name: Log in to Docker Hub
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+      run: echo $DOCKER_TOKEN | docker login -u $DOCKER_USERNAME --password-stdin
+
+    - name: Tag Docker image
+      run: docker tag DevOps_Assignment_3 bgubhaju/DevOps_Assignment_3:latest
+
+    - name: Push Docker image to Docker Hub
+      run: docker push bgubhaju/DevOps_Assignment_3:latest
