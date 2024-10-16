@@ -56,4 +56,4 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_REGION: 'us-east-1'
       run: |
-        aws ecs update-service --cluster my-cluster --service my-service --force-new-deployment
+        aws ecs update-service --cluster devopsassignment3cluster --service my-service --force-new-deployment
