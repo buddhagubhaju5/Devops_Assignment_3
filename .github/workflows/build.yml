@@ -25,7 +25,7 @@ jobs:
       run: npm install
 
     - name: Build Docker image
-      run: docker build -t DevOps_Assignment_3 .
+      run: docker build -t devops_assignment_3 .
 
     - name: Log in to Docker Hub
       env:
@@ -34,7 +34,7 @@ jobs:
       run: echo $DOCKER_TOKEN | docker login -u $DOCKER_USERNAME --password-stdin
 
     - name: Tag Docker image
-      run: docker tag devops_assignment_3 bgubhaju/DevOps_Assignment_3:latest
+      run: docker tag devops_assignment_3 bgubhaju/devops_assignment_3:latest
 
     - name: Push Docker image to Docker Hub
-      run: docker push bgubhaju/DevOps_Assignment_3:latest
+      run: docker push bgubhaju/devops_assignment_3:latest
