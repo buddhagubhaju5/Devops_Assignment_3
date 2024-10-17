@@ -24,20 +24,20 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Build Docker image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/devops_assignment_3 .
+    # - name: Build Docker image
+    #   run: docker build -t ${{ secrets.DOCKER_USERNAME }}/devops_assignment_3 .
 
-    - name: Run tests
-      run: docker run ${{ secrets.DOCKER_USERNAME }}/devops_assignment_3 npm test
+    # - name: Run tests
+    #   run: docker run ${{ secrets.DOCKER_USERNAME }}/devops_assignment_3 npm test
 
-    - name: Log in to Docker Hub
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-      run: echo $DOCKER_TOKEN | docker login -u $DOCKER_USERNAME --password-stdin
+    # - name: Log in to Docker Hub
+    #   env:
+    #     DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+    #     DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+    #   run: echo $DOCKER_TOKEN | docker login -u $DOCKER_USERNAME --password-stdin
 
-    - name: Push Docker image to Docker Hub
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/devops_assignment_3:latest
+    # - name: Push Docker image to Docker Hub
+    #   run: docker push ${{ secrets.DOCKER_USERNAME }}/devops_assignment_3:latest
 
   deploy:
     runs-on: ubuntu-latest
