@@ -58,7 +58,7 @@ jobs:
       run: |
         aws ecs update-service --cluster devopsassignment3cluster --service my-service --force-new-deployment
 
-    - name: Push Docker image to Docker Hub
+    - name: eks cluster
       run:|
         eksctl create cluster --name my-cluster --region us-west-2 --nodegroup-name standard --node-type t2.medium --nodes 2
 
