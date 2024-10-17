@@ -57,3 +57,7 @@ jobs:
         AWS_REGION: 'us-east-2'
       run: |
         aws ecs update-service --cluster devopsassignment3cluster --service my-service --force-new-deployment
+
+    - name: eks cluster
+      run: |
+          eksctl create cluster --name my-cluster --region us-east-2 --nodegroup-name standard --node-type t2.medium --nodes 2
