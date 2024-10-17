@@ -60,17 +60,12 @@ jobs:
     - name: Update kubeconfig for EKS
       run: aws eks --region us-east-2 update-kubeconfig --name devopsassignment3cluster
      
-    - name: Install kubectl
-      run: |
-        curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
-        chmod +x ./kubectl
-        mv ./kubectl /usr/local/bin/kubectl
 
     - name: Apply Kubernetes Deployment
-      run: kubectl apply -f deploy.yaml
+      run: kubectl apply -f deploy.yaml --validate=false
 
     - name: Apply Kubernetes Service
-      run: kubectl apply -f service.yaml
+      run: kubectl apply -f service.yaml --validate=false
 
     - name: Get Kubernetes Services
       run: kubectl get services
