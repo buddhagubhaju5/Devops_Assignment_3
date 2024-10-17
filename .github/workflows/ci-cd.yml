@@ -1,4 +1,4 @@
-name:  Build Docker Image and deploy
+name: Build Docker Image and Deploy
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
       run: npm install
 
     - name: Build Docker image
-      run: docker build -t devops_assignment_3 .
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/devops_assignment_3 .
 
     - name: Run tests
       run: docker run ${{ secrets.DOCKER_USERNAME }}/devops_assignment_3 npm test
@@ -35,9 +35,6 @@ jobs:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
       run: echo $DOCKER_TOKEN | docker login -u $DOCKER_USERNAME --password-stdin
-
-    - name: Tag Docker image
-      run: docker push ${{ secrets.DOCKER_USERNAME }}/devops_assignment_3:latest
 
     - name: Push Docker image to Docker Hub
       run: docker push ${{ secrets.DOCKER_USERNAME }}/devops_assignment_3:latest
@@ -50,14 +47,26 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Deploy to ECS
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_REGION: 'us-east-2'
-      run: |
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-2
+
+    - run: |
         aws ecs update-service --cluster devopsassignment3cluster --service my-service --force-new-deployment
 
-    - name: eks cluster
-      run: |
-          eksctl create cluster --name my-cluster --region us-east-2 --nodegroup-name standard --node-type t2.medium --nodes 2
+    - name: Update kubeconfig for EKS
+      run: aws eks --region us-east-2 update-kubeconfig --name devopsassignment3cluster
+
+    - name: Apply Kubernetes Deployment
+      run: kubectl apply -f deployment.yaml
+
+    - name: Apply Kubernetes Service
+      run: kubectl apply -f service.yaml
+
+    - name: Get Kubernetes Services
+      run: kubectl get services
+
+
