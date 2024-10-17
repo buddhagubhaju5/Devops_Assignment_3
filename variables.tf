@@ -18,5 +18,5 @@ variable "ami" {
 variable "private_key_path" {
   description = "Path to the private key for SSH access"
   type        = string
-  default     = "~/.ssh/id_ed25519"
+  default     = "~/.ssh/id_ed25519.pub"
 }
