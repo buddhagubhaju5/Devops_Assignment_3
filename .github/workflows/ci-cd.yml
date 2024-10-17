@@ -61,7 +61,7 @@ jobs:
       run: aws eks --region us-east-2 update-kubeconfig --name devopsassignment3cluster
 
     - name: Apply Kubernetes Deployment
-      run: kubectl apply -f deployment.yaml
+      run: kubectl apply -f deploy.yml
 
     - name: Apply Kubernetes Service
       run: kubectl apply -f service.yaml
