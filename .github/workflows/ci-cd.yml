@@ -24,20 +24,20 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    # - name: Build Docker image
-    #   run: docker build -t ${{ secrets.DOCKER_USERNAME }}/devops_assignment_3 .
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.5.0
 
-    # - name: Run tests
-    #   run: docker run ${{ secrets.DOCKER_USERNAME }}/devops_assignment_3 npm test
+    - name: Terraform Init
+      run: terraform init
 
-    # - name: Log in to Docker Hub
-    #   env:
-    #     DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-    #     DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
-    #   run: echo $DOCKER_TOKEN | docker login -u $DOCKER_USERNAME --password-stdin
-
-    # - name: Push Docker image to Docker Hub
-    #   run: docker push ${{ secrets.DOCKER_USERNAME }}/devops_assignment_3:latest
+    - name: Terraform Apply
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_REGION: us-east-2
+      run: terraform apply -auto-approve
 
   deploy:
     runs-on: ubuntu-latest
@@ -68,25 +68,9 @@ jobs:
 
     - name: Get Kubernetes Services
       run: kubectl get services
-    
+
     - name: Install kubectl
       run: |
-          curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x ./kubectl
-          sudo mv ./kubectl /usr/local/bin/kubectl
-
-    - name: Verify kubectl
-      run: kubectl get pods
-
-    - name: Deploy to Kubernetes
-      run: |
-        kubectl apply -f deploy.yaml
-        kubectl apply -f service.yaml
-
-    - name: Update Kubernetes Deployment
-      run: kubectl set image deployment/myapp-deployment myapp-container=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-2.amazonaws.com/devops_assignment_3:latest
-
-    - name: Restart Kubernetes Deployment
-      run: kubectl rollout restart deployment/myapp-deployment
-
-
+        curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+        chmod +x ./kubectl
+        sudo mv ./kubectl /usr/local/bin/kubectl
