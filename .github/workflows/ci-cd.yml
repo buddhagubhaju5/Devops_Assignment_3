@@ -68,5 +68,25 @@ jobs:
 
     - name: Get Kubernetes Services
       run: kubectl get services
+    
+    - name: Install kubectl
+      run: |
+          curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          sudo mv ./kubectl /usr/local/bin/kubectl
+
+    - name: Verify kubectl
+      run: kubectl get pods
+
+    - name: Deploy to Kubernetes
+      run: |
+        kubectl apply -f deploy.yaml
+        kubectl apply -f service.yaml
+
+    - name: Update Kubernetes Deployment
+      run: kubectl set image deployment/myapp-deployment myapp-container=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-2.amazonaws.com/devops_assignment_3:latest
+
+    - name: Restart Kubernetes Deployment
+      run: kubectl rollout restart deployment/myapp-deployment
 
 
